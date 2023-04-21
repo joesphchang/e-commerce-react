@@ -1,10 +1,10 @@
 import React from 'react'
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom'
 import './Card.scss';
 
-export const Card = ({item}) => {
+const Card = ({item}) => {
   return (
-      <Link to={`/product/${item.id}`} className='link'>
+          <Link to={`/product/${item.id}`} className='link'>
         <div className="card">
           <div className="image">
             {item.isNew && <span>New Season</span>}
@@ -20,3 +20,5 @@ export const Card = ({item}) => {
       </Link>
   )
 }
+
+export default Card
