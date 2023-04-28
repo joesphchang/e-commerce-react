@@ -1,41 +1,61 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Card from '../Card/Card';
 import './FeaturedProducts.scss';
+import axios from 'axios';
 
 const FeaturedProducts = ({type}) => {
 
-    const data = [
-        {
-            id: 1,
-            img: 'https://i.imgur.com/4AkVACK.jpg',
-            title: 'T-Shirt',
-            isNew: true,
-            oldPrice: 30,
-            price: 22,
-        },
-        {
-            id: 2,
-            img: 'https://i.imgur.com/jlVNPGQ.jpg',
-            title: 'Jeans',
-            isNew: true,
-            oldPrice: 65,
-            price: 50,
-        },
-        {
-            id: 3,
-            img: 'https://i.imgur.com/5yhMwih.jpg',
-            title: 'Pull-Over Hoodie',
-            oldPrice: 80,
-            price: 72,
-        },
-        {
-            id: 4,
-            img: 'https://i.imgur.com/8zmto7i.jpg',
-            title: 'Shoes',
-            oldPrice: 125,
-            price: 100,
-        },
-    ]
+    // const data = [
+    //     {
+    //         id: 1,
+    //         img: 'https://i.imgur.com/4AkVACK.jpg',
+    //         title: 'T-Shirt',
+    //         isNew: true,
+    //         oldPrice: 30,
+    //         price: 22,
+    //     },
+    //     {
+    //         id: 2,
+    //         img: 'https://i.imgur.com/jlVNPGQ.jpg',
+    //         title: 'Jeans',
+    //         isNew: true,
+    //         oldPrice: 65,
+    //         price: 50,
+    //     },
+    //     {
+    //         id: 3,
+    //         img: 'https://i.imgur.com/5yhMwih.jpg',
+    //         title: 'Pull-Over Hoodie',
+    //         oldPrice: 80,
+    //         price: 72,
+    //     },
+    //     {
+    //         id: 4,
+    //         img: 'https://i.imgur.com/8zmto7i.jpg',
+    //         title: 'Shoes',
+    //         oldPrice: 125,
+    //         price: 100,
+    //     },
+    // ];
+
+    const [ data, setData ] = useState([]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const res = await axios.get(process.env.REACT_APP_API_URL+"/products?populate=*", {
+                    headers: {
+                        Authorization: "bearer " + process.env.REACT_APP_API_TOKEN,
+                    }
+                });
+                setData(res.data.data);
+            } catch (error) {
+                console.log(error)
+            }
+        };
+        fetchData();
+    }, [])
+
   return (
     <div className='featuredProducts'>
         <div className="top">
