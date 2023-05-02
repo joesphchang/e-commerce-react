@@ -1,58 +1,34 @@
-import React, { useEffect, useState } from 'react'
-import Card from '../Card/Card';
-import './FeaturedProducts.scss';
-import axios from 'axios';
-import useFetch from '../../hooks/useFetch';
+import React from "react";
+import Card from "../Card/Card";
+import "./FeaturedProducts.scss";
+import useFetch from "../../hooks/useFetch";
 
-const FeaturedProducts = ({type}) => {
+const FeaturedProducts = ({ type }) => {
+  const { data, loading, error } = useFetch(
+    `/products?populate=*&[filters][type][$eq]=${type}`
+  );
 
-    // const data = [
-    //     {
-    //         id: 1,
-    //         img: 'https://i.imgur.com/4AkVACK.jpg',
-    //         title: 'T-Shirt',
-    //         isNew: true,
-    //         oldPrice: 30,
-    //         price: 22,
-    //     },
-    //     {
-    //         id: 2,
-    //         img: 'https://i.imgur.com/jlVNPGQ.jpg',
-    //         title: 'Jeans',
-    //         isNew: true,
-    //         oldPrice: 65,
-    //         price: 50,
-    //     },
-    //     {
-    //         id: 3,
-    //         img: 'https://i.imgur.com/5yhMwih.jpg',
-    //         title: 'Pull-Over Hoodie',
-    //         oldPrice: 80,
-    //         price: 72,
-    //     },
-    //     {
-    //         id: 4,
-    //         img: 'https://i.imgur.com/8zmto7i.jpg',
-    //         title: 'Shoes',
-    //         oldPrice: 125,
-    //         price: 100,
-    //     },
-    // ];
-
-   const {data, loading, error} = useFetch(`/products?populate=*&[filters][type][$eq]=${type}`)
   return (
-    <div className='featuredProducts'>
-        <div className="top">
-            <h1>{type} Products</h1>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Dictum fusce ut placerat orci nulla pellentesque dignissim enim. Diam quis enim lobortis scelerisque fermentum dui faucibus. Erat nam at lectus urna duis convallis. Semper risus in hendrerit gravida rutrum quisque non tellus orci. Egestas egestas fringilla phasellus faucibus. Nisi lacus sed viverra tellus in hac. </p>
-        </div>
-        <div className="bottom">
-            {loading? "loading" : data.map(item => (
-                <Card item={item} key={item.id} />
-            ))}
-        </div>
+    <div className="featuredProducts">
+      <div className="top">
+        <h1>{type} products</h1>
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+          eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis ipsum
+          suspendisse ultrices gravida. Risus commodo viverra maecenas accumsan
+          lacus vel facilisis labore et dolore magna aliqua. Quis ipsum
+          suspendisse ultrices gravida. Risus commodo viverra maecenas.
+        </p>
+      </div>
+      <div className="bottom">
+        {error
+          ? "Something went wrong!"
+          : loading
+          ? "loading"
+          : data?.map((item) => <Card item={item} key={item.id} />)}
+      </div>
     </div>
-  )
-}
+  );
+};
 
-export default FeaturedProducts
+export default FeaturedProducts;
