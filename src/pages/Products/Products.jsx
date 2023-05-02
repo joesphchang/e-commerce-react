@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import List from '../../components/List/List'
+import useFetch from '../../hooks/useFetch'
 import './Products.scss'
 
 const Products = () => {
@@ -8,30 +9,29 @@ const Products = () => {
   const catId = parseInt(useParams().id);
   const [maxPrice, setMaxPrice] = useState(1000);
   const [sort , setSort] = useState(null);
+  const [selectedSubCategory, setSelectedSubCategory] = useState([]);
  
-  console.log();
+  const {data, loading, error} = useFetch(`/sub-categories?[filters][categories][id][$eq]=${catId}`);
+
+  const handleChange = (e) => {
+    const value = e.target.value;
+    const isChecked = e.target.checked;
+
+    setSelectedSubCategory(isChecked ? [...selectedSubCategory, value] : selectedSubCategory.filter((item) => item !== value))
+  };
+
   return (
     <div className='products'>
       <div className="left">
         <div className="filterItem">
           <h2>Product Categories</h2>
-          <div className="inputItem">
-            <input type='checkbox' id='1' value={1} />
-            <label htmlFor='1' >Shoes</label>
+          {data?.map((item) => (
+            <div className="inputItem" key={item.id}>
+              <input type='checkbox' id='1' value={item.id} onChange={handleChange} />
+              <label htmlFor={item.id} >{item.attributes.title}</label>
+            </div>  
+          ))}
           </div>
-          <div className="inputItem">
-            <input type='checkbox' id='2' value={2} />
-            <label htmlFor='2' >T-Shirt</label>
-          </div>
-          <div className="inputItem">
-            <input type='checkbox' id='3' value={3} />
-            <label htmlFor='3' >Hoodies</label>
-          </div>
-          <div className="inputItem">
-            <input type='checkbox' id='4' value={4} />
-            <label htmlFor='4' >Pants</label>
-          </div>
-        </div>
         <div className="filterItem">
          <h2>Filter By Price</h2>
          <div className="inputItem">
@@ -54,7 +54,7 @@ const Products = () => {
       </div>
       <div className="right">
         <img className='catImg' src='' alt='' />
-        <List catId={catId} maxPrice={maxPrice} sort={sort} />
+        <List catId={catId} maxPrice={maxPrice} sort={sort} subCats={selectedSubCategory} />
       </div>
     </div>
   )
