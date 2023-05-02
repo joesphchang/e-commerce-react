@@ -23,7 +23,10 @@ const Product = () => {
                   data?.attributes?.image_02?.data?.attributes?.url} alt='' onClick={(e) => setSelectedImg("image_02")} />
         </div>
         <div className="mainImg">
-          <img src={process.env.REACT_APP_UPLOAD_URL+data?.attributes[selectedImg]?.image_02?.data?.attributes?.url} alt='' />
+          <img src={
+                  process.env.REACT_APP_UPLOAD_URL +
+                  data?.attributes[selectedImg]?.data?.attributes?.url
+                } alt='' />
         </div>
       </div>
       <div className="right">
