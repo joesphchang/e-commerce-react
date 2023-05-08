@@ -4,6 +4,8 @@ import { DeleteForever } from '@mui/icons-material';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { removeItem, resetCart } from '../../redux/cartReducer';
+import { makeRequest } from '../../makeRequest';
+import { loadStripe } from '@stripe/stripe-js';
 
 const Cart = () => {
 
@@ -35,6 +37,24 @@ const Cart = () => {
         products.forEach(item => (total += item.quantity * item.price))
         return total.toFixed(2);
     }
+
+    const stripePromise = loadStripe('pk_live_HPu2wnQluxdTycMH5pXjmgV0')
+
+    const handlePayment = async () => {
+        try {
+            const stripe = await stripePromise;
+
+            const res = await makeRequest.post("/orders", {
+                products,
+            });
+
+            await stripe.redirectToCheckout({
+                sessionId:res.data.stripeSession.id,
+            })
+        } catch (error) {
+            console.log(error)
+        }
+    }
   return (
     <div className='cart'>
         <h1>Title</h1>
@@ -58,7 +78,7 @@ const Cart = () => {
             <span>SUB TOTAL</span>
             <span>${totalPrice()}</span>
         </div>
-        <button className='checkout'>PROCEED TO CHECKOUT</button>
+        <button className='checkout' onClick={handlePayment} >PROCEED TO CHECKOUT</button>
         <span className="reset" onClick={() => dispatch(resetCart())}>Reset Cart</span>
     </div>
   )
